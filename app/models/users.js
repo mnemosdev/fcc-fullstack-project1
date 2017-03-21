@@ -10,9 +10,11 @@ var User = new Schema({
 		username: String,
       publicRepos: Number
 	},
-   nbrClicks: {
-      clicks: Number
-   }
+	google: {
+	    id: String,
+	    token : String,
+	    displayName: String
+	}
 });
 
 module.exports = mongoose.model('User', User);

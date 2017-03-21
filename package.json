@@ -1,7 +1,7 @@
 {
-  "name": "clementinejs-fcc",
-  "version": "1.0.1",
-  "description": "The elegant and lightweight boilerplate for full stack JavaScript.",
+  "name": "fcc_votingapp",
+  "version": "1.0.0",
+  "description": "",
   "main": "server.js",
   "repository": {
     "type": "git",
@@ -19,16 +19,21 @@
     "boilerplate"
   ],
   "scripts": {
-  "start": "node server.js"
+    "start": "node server.js"
   },
-  "author": "Blake Johnston",
+  "author": "Lorenzo Pieri",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
     "dotenv": "^1.2.0",
+    "ejs": "^2.5.6",
     "express": "^4.12.4",
     "express-session": "^1.11.3",
     "mongoose": "^4.1.0",
+    "morgan": "^1.8.1",
     "passport": "^0.3.0",
-    "passport-github": "^1.0.0"
+    "passport-github": "^1.0.0",
+    "passport-google-oauth": "^1.0.0"
   }
 }

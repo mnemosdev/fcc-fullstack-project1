@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<title>FCC Voting App - Profile Page</title>
+		
+		<link href="/public/css/main.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	    <style>
+	        body        { padding-top:80px; word-wrap:break-word; }
+	    </style>
+	</head>
+
+	<body>
+		<header>
+			<a class="menu" href="/logout">Logout</a>
+		</header>
+		
+		<div class="container">
+			<div>
+				<p>ID: <span id="profile-id"><%= user.google.id %></span></p>
+				<p>Display Name: <span id="display-name" class="profile-value"><%= user.google.displayName %></span></p>
+				<a class="menu" href="/">Home</a>
+				<p id="menu-divide">|</p>
+				<a class="menu" href="/logout">Logout</a>
+			</div>
+		</div>
+	</body>
+
+</html>
