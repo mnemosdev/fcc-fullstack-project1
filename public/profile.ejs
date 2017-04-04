@@ -5,6 +5,8 @@
 	<head>
 		<title>FCC Voting App - Profile Page</title>
 		
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+		<link href="/public/css/materialize.min.css" rel="stylesheet" type="text/css">
 		<link href="/public/css/main.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
@@ -15,10 +17,20 @@
 
 	<body>
 		<header>
-			<a class="menu" href="/logout">Logout</a>
+			<h1>
+				FCC VOTING APP
+			</h1>
+			<div>
+				<button class="btn"><a class="menu" href="/">Home</a></button>
+				<button class="btn"><a class="menu" href="/logout">Logout</a></button>
+			</div>
+			<div>
+				<p>ID: <span id="profile-id"><%= user.google.id %></span></p>
+				<p>Display Name: <span id="display-name" class="profile-value"><%= user.google.displayName %></span></p>
+			</div>
 		</header>
 		
-		<div class="container">
+		<!--<div class="container">
 			<div>
 				<p>ID: <span id="profile-id"><%= user.google.id %></span></p>
 				<p>Display Name: <span id="display-name" class="profile-value"><%= user.google.displayName %></span></p>
@@ -26,7 +38,11 @@
 				<p id="menu-divide">|</p>
 				<a class="menu" href="/logout">Logout</a>
 			</div>
-		</div>
+		</div>-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/public/js/materialize.min.js"></script>
+		<script type="text/javascript" src="../controllers/app.js"></script>
 	</body>
 
 </html>

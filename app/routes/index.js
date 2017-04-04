@@ -77,7 +77,15 @@ module.exports = function (app, passport) {
 		
 	app.route('/polls/:poll')
 		.get(function(req, res){
+			let id = req.params.poll;
 			
+			Polls.find({ _id : id }, function(err, data){
+				if (err){
+					console.error(err);
+					res.redirect('/');
+				}
+				res.render(path + '/public/poll', { 'data' : data })
+			})
 		}); // single poll view
 	
 	app.route('/new')
@@ -99,7 +107,15 @@ module.exports = function (app, passport) {
 	});
 	
 	app.get('/api/polls/:poll', function(req, res){
-		// GET SINGLE POLL
+		let id = req.params.poll;
+			
+		Polls.find({ _id : id }, function(err, data){
+			if (err){
+				console.error(err);
+				res.json('error');
+			}
+			res.json(data);
+		})
 	});
 	
 	app.route('/api/polls')
@@ -127,17 +143,95 @@ module.exports = function (app, passport) {
 	
 	app.post('/api/polls/:poll', function(req, res){
 		// CREATE NEW OPTION FOR SINGLE POLL
+		// req.params.poll
+		var update_object = {
+			'name' : req.body.name,
+			'votes' : 0
+		};
+		
+		Polls.update(
+			{'_id' : req.params.poll},
+			{
+				$push : { 
+					options : update_object
+				}
+			},
+			function(err, data){
+				if(err){
+					throw err;
+				}
+				
+				res.json(data);
+			}
+		)
+	});
+	
+	app.post('/api/polls/:poll/vote', function(req, res){
+		// Cast vote for :poll
+		var user_ip = req.headers['x-forwarded-for'];
+		var option = req.body.option;
+		var id = req.params.poll;
+		var poll_;
+		var poll_index;
+
+		
+		Polls.findById(id, function(err, poll){
+			// update the poll directly from here
+			if (err) throw err;
+			
+			poll_ = poll.options.find(function(current, index, array){
+				if(current.name == option){
+					poll_index = index;
+				}
+				return current.name == option;
+			})
+			
+			poll.options[poll_index].votes++;
+			
+			var user_voted = poll.users.find(function(current, index, array){
+				return current == user_ip;
+			});
+			
+			console.log(user_voted);
+			
+			if(user_voted == undefined){
+				Polls.updateOne(
+			      {
+			      	_id: id
+			      },
+			      {
+			        $set: {
+			        	"options" : poll.options
+			        },
+			        $push: {
+			        	"users" : user_ip
+			        }
+			      },
+			      {upsert:true},
+			      function(err, results) {
+			      	if (err) throw err;
+			      	
+			      	Polls.findById({
+			      		_id : id
+			      	}, function(err, doc){
+			      		if (err) throw err;
+			      		res.json(doc);
+			      	})
+			   })} else {
+				res.json({"voted" : true});
+			}
+		});
 	});
 		
 	/*
 	*@ Catch 'em all 404s
 	*/
-	/*app.all('*', function(req, res){
+	app.all('*', function(req, res){
 		/*
 		*@ Add 404 redirect
 		*@
 		*@ res.redirect('/404');
 		*/
-		/*res.send("404, page not found");
-	})*/
+		res.send("404, page not found");
+	})
 };

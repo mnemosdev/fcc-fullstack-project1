@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<title>FCC Voting App</title>
+		
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+		<link href="/public/css/materialize.min.css" rel="stylesheet" type="text/css">
+		<link href="/public/css/main.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+		<script type="text/javascript" src="../controllers/loader.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+	</head>
+
+	<body>
+		<div id="loader" class="loader">
+			<div class="loader__bar"></div>
+			<div class="loader__bar"></div>
+			<div class="loader__bar"></div>
+			<div class="loader__bar"></div>
+			<div class="loader__bar"></div>
+			<div class="loader__ball"></div>
+		</div>
+		<div id="container">
+			<header>
+				<h1>
+					FCC VOTING APP
+				</h1>
+				<div>
+					<button class="btn"><a class="menu" href="/profile">PROFILE</a></button>
+					<button class="btn"><a class="menu" href="/new">NEW POLL</a></button>
+					<button class="btn"><a class="menu" href="/">HOME</a></button>
+				</div>
+			</header>
+			
+			<span class="clearfix"></span>
+		
+			<div style="background-color: #fff; display: block; margin-top: 100px;" class="container">
+				<!-- App container -->
+				
+				<div id="poll" class="poll">
+					<div class="pull-left clearfix">
+					    <h2><%= data[0].name %></h2>
+					    <!--<h2><%= data[0].options %></h2>-->
+					    <div class="input-field">
+						    <form id="vote">
+							    <select style="display: block">
+							    	<% for(var i=0; i < data[0].options.length; i++){ %>
+							    		<option>
+							    			<%= data[0].options[i].name %>
+							    		</option>
+							    	<% } %>
+							    </select>
+							    <input style="display: block; margin-top: 20px;" class="btn" type="submit" value="SUBMIT VOTE" />
+						    </form>
+					    </div>
+					    
+					    <form style="display: block; margin-top: 100px;" id="newoption">
+					    	<input id="newoptiontext" type="text" placeholder="write something" />
+					    	<input class="btn" type="submit" value="NEW OPTION" />
+					    </form>
+				    </div>
+				    
+				    <div class="pull-right">
+				    	<!-- graphic -->
+				    	<canvas id="chart_id" width="400" height="400"></canvas>
+				    </div>
+				</div>
+			</div>
+			
+			<footer>
+				
+			</footer>
+			
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+			<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+			<script type="text/javascript" src="../controllers/app.js"></script>
+			<script type="text/javascript" src="/public/js/materialize.min.js"></script>
+			<script>
+				var chart_data;
+				var URL = 'https://fcc-boilerplate-mnemosdev.c9users.io/';
+			    var NEWPOLL_ENDPOINT = 'api/polls';
+    
+		    	var poll_id = "/" + location.pathname.split("/")[2];
+		    	
+		    	var poll_div = document.getElementById("poll");
+			    poll_div.addEventListener("votes", function(e){
+		    		console.log(e);
+		    		chartcb(e.detail.data);
+		    	})
+		    
+		        // poll_id = poll_id.substr(1);
+		        // console.log(URL + NEWPOLL_ENDPOINT + poll_id);
+		        
+		        $.ajax({
+		           type: 'GET',
+		           dataType: 'json',
+		           url: URL + NEWPOLL_ENDPOINT + poll_id,
+		        })
+		        .done(function(data, status, jqXHR){
+		            // console.log("working", data, status);
+		            chartcb(data[0]);
+		        })
+		        .fail(function(jqXHR, status, err){
+		            console.log(status, err);
+		        })
+			    /*
+			    [0]: Object
+			    	name
+			    	options
+			    		[0]:
+			    			Object
+			    			name
+			    			votes
+			    	users
+			    		Object
+			    */
+			    var chartcb = function(data){
+			    	var labels = [];
+			    	var votes = [];
+			    	var backgroundColors = [];
+			    	data.options.forEach(function(current, index, array){
+			    		labels.push(current.name);
+			    		votes.push(current.votes);
+			    		backgroundColors.push("rgb(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + ","  + Math.floor(Math.random() * 255) + ")");
+			    	})
+			    	// console.log(labels,votes,backgroundColors);
+			    	var ctx = document.getElementById("chart_id");
+			    	// console.log(ctx);
+					var chart = new Chart(ctx, {
+								type: "pie",
+								data: {
+									labels: labels,
+							        datasets: [{
+							            label: 'Votes',
+							            data: votes,
+							            backgroundColor: backgroundColors
+							        }]
+							    },
+							    options: {}
+							})
+			    }
+			</script>
+		</div>
+	</body>
+
+</html>
